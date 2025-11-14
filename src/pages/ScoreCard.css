@@ -1,0 +1,350 @@
+/* CONTAINER */
+.score-container {
+  padding: 16px;
+  font-family: "Inter", sans-serif;
+  background: #f8f8f8;
+  min-height: 100vh;
+}
+
+/* TABS */
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
+  padding: 12px 6px;
+  border-radius: 12px;
+  margin: 15px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #333;
+  transition: 0.2s ease;
+}
+
+.tab.active {
+  background: #000;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* FILTER BOX */
+.filter-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 15px;
+}
+
+.filter-box label {
+  font-size: 16px;
+  font-weight: 800;
+  color: #222;
+}
+
+.filter-box select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #c4c4c4;
+  font-size: 14px;
+  background: #fff;
+  color: #222;
+  width: 100%;
+}
+
+/* MATCH CARDS */
+.cards-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.match-card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 14px;
+  border: 2px solid #d7d7d7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  animation: fadeIn 0.3s ease;
+}
+
+/* SPORT TAG */
+.sport-tag {
+  background: #000;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* TEAMS LAYOUT */
+.teams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.team {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.team-name-box {
+  border: 1px solid #000;
+  padding: 6px 12px;
+  border-radius: 6px;
+  width: 100%;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.team-score-box {
+  background: #000;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 20px;
+  font-weight: 700;
+  width: 100%;
+  text-align: center;
+}
+
+.vs-circle {
+  margin: 0 10px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* TIME / STATUS */
+.time {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+}
+
+/* EMPTY MESSAGE */
+.empty-msg {
+  text-align: center;
+  color: #555;
+  margin: 20px 0;
+  font-style: italic;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ADMIN PANEL & PASSWORD POPUP */
+/* POPUP OVERLAY */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  padding: 10px;
+  /* prevents content from touching screen edges */
+  overflow-y: auto;
+  
+}
+
+/* PASSWORD BOX & ADMIN PANEL */
+.password-box,
+.admin-panel {
+  background: #fff;
+  width: 100%;
+  max-width: 450px;
+  /* slightly wider for admin panel */
+  padding: 30px 20px;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  text-align: left;
+  /* align inputs and labels to left */
+  animation: popupFade 0.25s ease;
+}
+
+.password-box h3{
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+  margin: 0;
+  text-align: center;
+}
+
+.password-btns{
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.password-box .inputs {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* spacing between sections */
+}
+
+/* ADMIN HEADER */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  background-color: #dddddd;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.admin-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #222;
+  margin: 0;
+  padding: 12px 16px;
+  
+}
+
+.admin-close {
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #555;
+  transition: 0.2s ease;
+}
+
+.admin-close:hover {
+  color: #000;
+}
+
+/* ADMIN INPUTS & BUTTONS */
+.admin-input,
+.password-box input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.admin-input:focus,
+.password-box input:focus {
+  border-color: #000;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+}
+
+/* ADMIN BUTTONS */
+.admin-btn-save,
+.cancel-btn {
+  width: 100%;
+  padding: 12px 0;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  margin-top: 8px;
+  transition: 0.2s ease;
+}
+
+.admin-btn-save {
+  background: #000;
+  color: #fff;
+}
+
+.admin-btn-save:hover {
+  background: #333;
+}
+
+.cancel-btn {
+  background: #ccc;
+  color: #222;
+}
+
+.cancel-btn:hover {
+  background: #999;
+}
+
+/* ADMIN SECTION */
+.admin-section {
+  background: #f4f4f4;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-section h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #222;
+  margin: 0 0 8px 0;
+}
+
+/* EMPTY MESSAGE INSIDE PANEL */
+.empty-msg {
+  text-align: center;
+  color: #555;
+  font-style: italic;
+  margin: 8px 0 0 0;
+}
+
+/* POPUP ANIMATION */
+@keyframes popupFade {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
