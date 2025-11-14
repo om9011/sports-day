@@ -1,4 +1,5 @@
 import ScoreCard from "./pages/ScoreCard";
+import logo from "./assets/logo.png";
 import "./App.css";
 
 export default function App() {
@@ -9,10 +10,10 @@ export default function App() {
       <header className="navbar">
         <div className="nav-left">
           {/* Optional Logo */}
-          <img src="/logo192.png" alt="logo" className="logo" />
+          <img src={logo} alt="logo" className="logo" />
         </div>
 
-        <h1 className="app-title">🏆 Sports Scoreboard</h1>
+        <h1 className="app-title">🏆Sports Scoreboard🏆</h1>
 
         <button
           className="admin-icon"
