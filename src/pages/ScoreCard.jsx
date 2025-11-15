@@ -16,6 +16,8 @@ export default function ScoreCard() {
   const [teamA, setTeamA] = useState("");
   const [teamB, setTeamB] = useState("");
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "admin123";
 
   const [matches, setMatches] = useState([]);
@@ -36,7 +38,12 @@ export default function ScoreCard() {
   // FILTERED MATCHES
   const filteredMatches = matches
     .filter(m => m.status === activeTab)
-    .filter(m => sportFilter === "all" ? true : m.sport === sportFilter);
+    .filter(m => sportFilter === "all" ? true : m.sport === sportFilter)
+    .filter(m =>
+      searchTerm === "" ||
+      m.teamA.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      m.teamB.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   // ADD UPCOMING MATCH
   const handleAddMatch = async () => {
@@ -93,7 +100,6 @@ export default function ScoreCard() {
     }
   };
 
-
   // OPEN PASSWORD POPUP WHEN ADMIN CLICK
   useEffect(() => {
     const handler = () => setShowPasswordPopup(true);
@@ -104,29 +110,22 @@ export default function ScoreCard() {
   // --- POINTS TABLE CALCULATION ---
   const calculatePointsTableByGroup = () => {
     const table = {};
-
-    // Loop over sports
     for (let sportName in teamsData) {
       table[sportName] = {};
-
-      // Loop over groups in this sport
       const groups = teamsData[sportName];
       for (let groupName in groups) {
         table[sportName][groupName] = {};
-
         groups[groupName].forEach(team => {
           table[sportName][groupName][team] = { won: 0, lost: 0, points: 0 };
         });
       }
     }
 
-    // Loop over matches
     matches
       .filter(m => m.status === "completed")
       .forEach(m => {
         if (!table[m.sport]) return;
 
-        // Find which group teamA and teamB belong to
         let groupA, groupB;
         for (let g in table[m.sport]) {
           if (table[m.sport][g][m.teamA] !== undefined) groupA = g;
@@ -134,7 +133,6 @@ export default function ScoreCard() {
         }
         if (!groupA || !groupB) return;
 
-        // Update points
         if (m.scoreA > m.scoreB) {
           table[m.sport][groupA][m.teamA].won += 1;
           table[m.sport][groupA][m.teamA].points += 2;
@@ -150,9 +148,6 @@ export default function ScoreCard() {
   };
 
   const pointsTable = calculatePointsTableByGroup();
-
-
-
 
   return (
     <div className="score-container">
@@ -195,10 +190,23 @@ export default function ScoreCard() {
       {/* ADMIN PANEL */}
       {showAdminPopup && (
         <div className="popup-overlay">
-          <div className="admin-panel">
+          <div className="admin-panel" style={{ maxHeight: "80vh", overflowY: "auto" }}>
             <div className="admin-header">
               <h2>Admin Panel</h2>
               <button className="admin-close" onClick={() => setShowAdminPopup(false)}>✖</button>
+            </div>
+
+            {/* SEARCH */}
+            <div className="admin-section">
+              <h3>Search Matches</h3>
+              <input
+                type="text"
+                placeholder="Search by team"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="admin-search-input"
+                style={{ width: "100%", padding: "6px", marginBottom: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
+              />
             </div>
 
             {/* ADD MATCH */}
@@ -211,7 +219,6 @@ export default function ScoreCard() {
                 <option value="Senior Kabaddi">Senior Kabaddi</option>
               </select>
 
-              {/* Team A Dropdown */}
               <select value={teamA} onChange={(e) => setTeamA(e.target.value)} className="admin-input">
                 <option value="">Select Team A</option>
                 {newSport && Object.values(teamsData[newSport]).flat().map(team => (
@@ -219,7 +226,6 @@ export default function ScoreCard() {
                 ))}
               </select>
 
-              {/* Team B Dropdown */}
               <select value={teamB} onChange={(e) => setTeamB(e.target.value)} className="admin-input">
                 <option value="">Select Team B</option>
                 {newSport && Object.values(teamsData[newSport]).flat().map(team => (
@@ -230,31 +236,54 @@ export default function ScoreCard() {
               <button className="admin-btn-save" onClick={handleAddMatch}>➕ Add Match</button>
             </div>
 
-
             {/* START UPCOMING MATCH */}
             <div className="admin-section">
               <h3>Start Upcoming Match</h3>
-              {matches.filter(m => m.status === "upcoming").length === 0 && <p className="empty-msg">No upcoming matches</p>}
-              {matches.filter(m => m.status === "upcoming").map(m => (
-                <button key={m.id} className="admin-btn-save" onClick={() => handleStartMatch(m.id)}>
-                  Start {m.teamA} vs {m.teamB}
-                </button>
-              ))}
+              {matches.filter(m => m.status === "upcoming")
+                .filter(m =>
+                  searchTerm === "" ||
+                  m.teamA.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  m.teamB.toLowerCase().includes(searchTerm.toLowerCase())
+                ).length === 0 && <p className="empty-msg">No upcoming matches</p>}
+
+              <div className="upcoming-matches-list">
+                {matches.filter(m => m.status === "upcoming")
+                  .filter(m =>
+                    searchTerm === "" ||
+                    m.teamA.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    m.teamB.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map(m => (
+                    <div key={m.id} className="upcoming-match-item">
+                      <div className="match-sport">{m.sport}</div>
+                      <div className="match-teams">
+                        {m.teamA} <span className="vs-text">VS</span> {m.teamB}
+                      </div>
+                      <button className="admin-btn-save start-match-btn" onClick={() => handleStartMatch(m.id)}>
+                        Start Match
+                      </button>
+                    </div>
+                  ))}
+              </div>
             </div>
+
 
             {/* UPDATE SCORE */}
             <div className="admin-section">
               <h3>Update Ongoing Match</h3>
-              {matches.filter(m => m.status === "ongoing").length === 0 && <p className="empty-msg">No ongoing matches</p>}
-              {matches.filter(m => m.status === "ongoing").map(m => (
-                <button
-                  key={m.id}
-                  className="admin-btn-save"
-                  onClick={() => handleUpdateScore(m.id, m.teamA, m.teamB)}
-                >
-                  Update {m.teamA} vs {m.teamB}
-                </button>
-              ))}
+              {matches
+                .filter(m => m.status === "ongoing")
+                .filter(m => searchTerm === "" || m.teamA.toLowerCase().includes(searchTerm.toLowerCase()) || m.teamB.toLowerCase().includes(searchTerm.toLowerCase()))
+                .map(m => (
+                  <button
+                    key={m.id}
+                    className="admin-btn-save"
+                    onClick={() => handleUpdateScore(m.id, m.teamA, m.teamB)}
+                  >
+                    Update {m.teamA} vs {m.teamB}
+                  </button>
+                ))
+              }
             </div>
           </div>
         </div>
@@ -268,8 +297,8 @@ export default function ScoreCard() {
         <button className={activeTab === "points" ? "tab active" : "tab"} onClick={() => setActiveTab("points")}>Points Table</button>
       </div>
 
-      {/* SPORT FILTER */}
-      <div className="filter-box">
+      {/* SPORT FILTER + SEARCH */}
+      <div className="filter-box" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <label>Sport</label>
         <select value={sportFilter} onChange={(e) => setSportFilter(e.target.value)}>
           <option value="all">All</option>
@@ -277,6 +306,15 @@ export default function ScoreCard() {
           <option value="Kabaddi">Kabaddi</option>
           <option value="Senior Kabaddi">Senior Kabaddi</option>
         </select>
+
+        <input
+          type="text"
+          placeholder="Search by team"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+          style={{ padding: "5px", borderRadius: "5px", border: "1px solid #ccc" }}
+        />
       </div>
 
       {/* MATCH CARDS */}
@@ -323,43 +361,42 @@ export default function ScoreCard() {
 
       {/* POINTS TABLE */}
       {activeTab === "points" && (
-  <div className="cards-box">
-    {(sportFilter === "all" ? Object.keys(pointsTable) : [sportFilter]).map(sport => (
-      <div key={sport} className="match-card">
-        <span className="sport-tag">{sport}</span>
+        <div className="cards-box">
+          {(sportFilter === "all" ? Object.keys(pointsTable) : [sportFilter]).map(sport => (
+            <div key={sport} className="match-card">
+              <span className="sport-tag">{sport}</span>
 
-        {Object.keys(pointsTable[sport]).map(groupName => (
-          <div key={groupName} className="points-table">
-            <h4 className="points-group-title">{groupName}</h4>
-            <table>
-              <thead>
-                <tr>
-                  <th>Team</th>
-                  <th>Won</th>
-                  <th>Lost</th>
-                  <th>Points</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(pointsTable[sport][groupName])
-                  .sort((a, b) => b[1].points - a[1].points)
-                  .map(([team, data], idx, arr) => (
-                    <tr key={team} className={idx === 0 ? "top-team" : idx === arr.length - 1 ? "low-team" : ""}>
-                      <td>{team}</td>
-                      <td>{data.won}</td>
-                      <td>{data.lost}</td>
-                      <td>{data.points}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        ))}
-      </div>
-    ))}
-  </div>
-)}
-
+              {Object.keys(pointsTable[sport]).map(groupName => (
+                <div key={groupName} className="points-table">
+                  <h4 className="points-group-title">{groupName}</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Team</th>
+                        <th>Won</th>
+                        <th>Lost</th>
+                        <th>Points</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(pointsTable[sport][groupName])
+                        .sort((a, b) => b[1].points - a[1].points)
+                        .map(([team, data], idx, arr) => (
+                          <tr key={team} className={idx === 0 ? "top-team" : idx === arr.length - 1 ? "low-team" : ""}>
+                            <td>{team}</td>
+                            <td>{data.won}</td>
+                            <td>{data.lost}</td>
+                            <td>{data.points}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
 
     </div>
   );
