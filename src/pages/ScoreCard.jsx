@@ -323,86 +323,43 @@ export default function ScoreCard() {
 
       {/* POINTS TABLE */}
       {activeTab === "points" && (
-        <div className="cards-box">
-          {sportFilter === "all"
-            ? Object.keys(pointsTable).map(sport => (
-              <div key={sport} className="match-card">
-                <span className="sport-tag">{sport}</span>
+  <div className="cards-box">
+    {(sportFilter === "all" ? Object.keys(pointsTable) : [sportFilter]).map(sport => (
+      <div key={sport} className="match-card">
+        <span className="sport-tag">{sport}</span>
 
-                {Object.keys(pointsTable[sport]).map(groupName => (
-                  <div key={groupName} className="points-table">
-                    <h4 className="points-group-title">{groupName}</h4>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Team</th>
-                          <th>Won</th>
-                          <th>Lost</th>
-                          <th>Points</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Object.entries(pointsTable[sport][groupName])
-                          .sort((a, b) => b[1].points - a[1].points)
-                          .map(([team, data], idx, arr) => (
-                            <tr
-                              key={team}
-                              className={
-                                idx === 0
-                                  ? "top-team"
-                                  : idx === arr.length - 1
-                                    ? "low-team"
-                                    : ""
-                              }
-                            >
-                              <td>{team}</td>
-                              <td>{data.won}</td>
-                              <td>{data.lost}</td>
-                              <td>{data.points}</td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
+        {Object.keys(pointsTable[sport]).map(groupName => (
+          <div key={groupName} className="points-table">
+            <h4 className="points-group-title">{groupName}</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Team</th>
+                  <th>Won</th>
+                  <th>Lost</th>
+                  <th>Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(pointsTable[sport][groupName])
+                  .sort((a, b) => b[1].points - a[1].points)
+                  .map(([team, data], idx, arr) => (
+                    <tr key={team} className={idx === 0 ? "top-team" : idx === arr.length - 1 ? "low-team" : ""}>
+                      <td>{team}</td>
+                      <td>{data.won}</td>
+                      <td>{data.lost}</td>
+                      <td>{data.points}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+)}
 
-                ))}
-              </div>
-            ))
-            : (
-              <div className="match-card">
-                <span className="sport-tag">{sportFilter}</span>
-                {Object.keys(pointsTable[sportFilter]).map(groupName => (
-                  <div key={groupName} style={{ marginTop: "12px" }}>
-                    <h4>{groupName}</h4>
-                    <table style={{ width: "100%", marginTop: "6px", textAlign: "left" }}>
-                      <thead>
-                        <tr>
-                          <th>Team</th>
-                          <th>Won</th>
-                          <th>Lost</th>
-                          <th>Points</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Object.entries(pointsTable[sportFilter][groupName])
-                          .sort((a, b) => b[1].points - a[1].points)
-                          .map(([team, data]) => (
-                            <tr key={team}>
-                              <td>{team}</td>
-                              <td>{data.won}</td>
-                              <td>{data.lost}</td>
-                              <td>{data.points}</td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ))}
-              </div>
-            )
-          }
-        </div>
-      )}
 
     </div>
   );
