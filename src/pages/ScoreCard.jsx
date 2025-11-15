@@ -238,7 +238,15 @@ export default function ScoreCard() {
 
             {/* START UPCOMING MATCH */}
             <div className="admin-section">
-              <h3>Start Upcoming Match</h3>
+              <h3>Start Upcoming Match
+                (
+                {matches.filter(m =>
+                  m.status === "upcoming" &&
+                  (searchTerm === "" ||
+                    m.teamA.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    m.teamB.toLowerCase().includes(searchTerm.toLowerCase()))
+                ).length})
+              </h3>
               {matches.filter(m => m.status === "upcoming")
                 .filter(m =>
                   searchTerm === "" ||
@@ -270,7 +278,13 @@ export default function ScoreCard() {
 
             {/* UPDATE SCORE */}
             <div className="admin-section">
-              <h3>Update Ongoing Match</h3>
+              <h3>Update Ongoing Match (
+                {matches.filter(m =>
+                  m.status === "ongoing" &&
+                  (searchTerm === "" ||
+                    m.teamA.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    m.teamB.toLowerCase().includes(searchTerm.toLowerCase()))
+                ).length})</h3>
               {matches
                 .filter(m => m.status === "ongoing")
                 .filter(m => searchTerm === "" || m.teamA.toLowerCase().includes(searchTerm.toLowerCase()) || m.teamB.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -291,11 +305,32 @@ export default function ScoreCard() {
 
       {/* TABS */}
       <div className="tabs">
-        <button className={activeTab === "ongoing" ? "tab active" : "tab"} onClick={() => setActiveTab("ongoing")}>Ongoing</button>
-        <button className={activeTab === "completed" ? "tab active" : "tab"} onClick={() => setActiveTab("completed")}>Completed</button>
-        <button className={activeTab === "upcoming" ? "tab active" : "tab"} onClick={() => setActiveTab("upcoming")}>Upcoming</button>
-        <button className={activeTab === "points" ? "tab active" : "tab"} onClick={() => setActiveTab("points")}>Points Table</button>
+        <button
+          className={activeTab === "ongoing" ? "tab active" : "tab"}
+          onClick={() => setActiveTab("ongoing")}
+        >
+          Ongoing ({matches.filter(m => m.status === "ongoing").length})
+        </button>
+        <button
+          className={activeTab === "completed" ? "tab active" : "tab"}
+          onClick={() => setActiveTab("completed")}
+        >
+          Completed ({matches.filter(m => m.status === "completed").length})
+        </button>
+        <button
+          className={activeTab === "upcoming" ? "tab active" : "tab"}
+          onClick={() => setActiveTab("upcoming")}
+        >
+          Upcoming ({matches.filter(m => m.status === "upcoming").length})
+        </button>
+        <button
+          className={activeTab === "points" ? "tab active" : "tab"}
+          onClick={() => setActiveTab("points")}
+        >
+          Points Table
+        </button>
       </div>
+
 
       {/* SPORT FILTER + SEARCH */}
       <div className="filter-box" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
